@@ -2,7 +2,7 @@
 
 Named function for Elixir.
 
-Erlang added named fun for some time. While Elixir havn't adopt it yet. This package is just a PoC.
+Erlang added named fun for some time. While Elixir havn't adopt it yet. This package is a workaround.
 
 ## Usage
 
@@ -24,11 +24,11 @@ factorial = named_fn :f do
 end
 ```
 
-## Limitation
+## Limitations
 
-Not working in repl yet.
+Currently this heavily depend on Elixir and Erlang compiler. So it may break if underlaying APIs changed.
 
-Currently this heavily depend on Elixir and Erlang compiler. So it may break when underlaying APIs changed.
+If you define a named function with 0 arity, you can't call it inside body. Since it's hard to distinguish a call and a var, and we want to support using the function as a var.
 
 ## Installation
 

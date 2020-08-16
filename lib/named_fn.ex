@@ -38,7 +38,17 @@ defmodule NamedFn do
         {erl_var, value}
       end)
 
-    # {erl_ast, _, _} = :elixir.quoted_to_erl(quoted, env)
+    env =
+      env
+      # Suppress warning
+      |> Map.put(:prematch_vars, :apply)
+      # When `env.function` is `nil` it refuse to compile
+      |> Map.update!(:function, fn
+        nil -> {:define_named_fn, 4}
+        function -> function
+      end)
+
+    # Equivalent to {erl_ast, _, _} = :elixir.quoted_to_erl(quoted, env)
     {expanded, _} = :elixir_expand.expand(quoted, env)
     {erl_ast, _} = :elixir_erl_pass.translate(expanded, scope)
 
@@ -49,6 +59,10 @@ defmodule NamedFn do
 
   defp replace_fn_name(name) do
     fn
+      # If used without args, pass is as variable.
+      state, {:call, _, {:atom, line, ^name}, []} ->
+        {{:var, line, name}, state}
+
       state, {:call, line1, {:atom, line2, ^name}, args} ->
         {{:call, line1, {:var, line2, name}, args}, state}
 

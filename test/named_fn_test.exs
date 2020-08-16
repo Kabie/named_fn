@@ -40,4 +40,20 @@ defmodule NamedFnTest do
     assert fib.(1) == 1
     assert fib.(13) == 233
   end
+
+  test "return self" do
+    func = named_fn :this do
+      -> this
+    end
+
+    f = func.()
+    assert Function.info(f, :uniq) == Function.info(func, :uniq)
+
+    func = named_fn :this do
+      f -> f.(this)
+    end
+
+    f = func.(&Function.identity/1)
+    assert Function.info(f, :uniq) == Function.info(func, :uniq)
+  end
 end
