@@ -1,18 +1,19 @@
 defmodule NamedFn do
   @moduledoc """
-  Documentation for `NamedFn`.
+  Named function for Elixir.
   """
 
   @doc """
   Define a named function.
 
-  iex> import NamedFn
-  iex> fac = named_fn :fac do
-  ...>  0 -> 1
-  ...>  x when x > 0 -> x * fac(x - 1)
-  ...> end
-  iex> fac.(5)
-  120
+      iex> import NamedFn
+      iex> fac = named_fn :fac do
+      ...>  0 -> 1
+      ...>  x when x > 0 -> x * fac(x - 1)
+      ...> end
+      iex> fac.(5)
+      120
+
   """
   defmacro named_fn(name, do: clauses) do
     clauses = Macro.escape(clauses)
